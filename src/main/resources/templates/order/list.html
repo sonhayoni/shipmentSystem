@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MES Shipment System</title>
+</head>
+<body>
+
+<h1>주문 관리</h1>
+
+<h3>주문 등록</h3>
+
+<input type="text" id="customerName" placeholder="고객명">
+<input type="text" id="phone" placeholder="전화번호">
+<input type="text" id="address" placeholder="주소">
+<input type="text" id="itemName" placeholder="품목명">
+<input type="number" id="qty" placeholder="수량">
+
+<button onclick="insertOrder()">주문 등록</button>
+<button onclick="getOrderList()">주문 목록 조회</button>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>주문ID</th>
+        <th>고객명</th>
+        <th>전화번호</th>
+        <th>주소</th>
+        <th>품목명</th>
+        <th>수량</th>
+        <th>상태</th>
+        <th>등록일</th>
+    </tr>
+    </thead>
+    <tbody id="orderList"></tbody>
+</table>
+
+<script>
+    function insertOrder() {
+        const data = {
+            customerName: document.getElementById("customerName").value,
+            phone: document.getElementById("phone").value,
+            address: document.getElementById("address").value,
+            itemName: document.getElementById("itemName").value,
+            qty: Number(document.getElementById("qty").value),
+            status: "NEW"
+        };
+
+        fetch("/api/v1/order", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(() => {
+                alert("주문 등록 완료");
+                getOrderList();
+            });
+    }
+
+    function getOrderList() {
+        fetch("/api/v1/order")
+            .then(response => response.json())
+            .then(list => {
+                const tbody = document.getElementById("orderList");
+                tbody.innerHTML = "";
+
+                list.forEach(row => {
+                    const tr = document.createElement("tr");
+
+                    tr.innerHTML =
+                        "<td>" + (row.ORDER_ID || "") + "</td>" +
+                        "<td>" + (row.CUSTOMER_NAME || "") + "</td>" +
+                        "<td>" + (row.PHONE || "") + "</td>" +
+                        "<td>" + (row.ADDRESS || "") + "</td>" +
+                        "<td>" + (row.ITEM_NAME || "") + "</td>" +
+                        "<td>" + (row.QTY || "") + "</td>" +
+                        "<td>" + (row.STATUS || "") + "</td>" +
+                        "<td>" + (row.CREATED_AT || "") + "</td>";
+
+                    tbody.appendChild(tr);
+                });
+            });
+    }
+
+    getOrderList();
+</script>
+
+</body>
+</html>
