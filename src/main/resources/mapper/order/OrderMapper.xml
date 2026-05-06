@@ -5,4 +5,74 @@
 
 <mapper namespace="com.mappers.order.OrderMapper">
 
+    <!-- 주문 목록 조회 -->
+    <select id="getOrderList" resultType="hashmap">
+
+        SELECT
+            ORDER_ID,
+            CUSTOMER_NAME,
+            PHONE,
+            ADDRESS,
+            ITEM_NAME,
+            QTY,
+            STATUS,
+            CREATED_AT
+        FROM ORDERS
+        ORDER BY ORDER_ID DESC
+
+    </select>
+
+    <!-- 주문 등록 -->
+    <insert id="insertOrder" parameterType="hashmap">
+
+        INSERT INTO ORDERS (
+            CUSTOMER_NAME,
+            PHONE,
+            ADDRESS,
+            ITEM_NAME,
+            QTY,
+            STATUS
+        )
+        VALUES (
+                   #{customerName},
+                   #{phone},
+                   #{address},
+                   #{itemName},
+                   #{qty},
+                   #{status}
+               )
+
+    </insert>
+
+    <!-- 주문 수정 -->
+    <update id="updateOrder" parameterType="hashmap">
+
+        UPDATE ORDERS
+        SET
+            CUSTOMER_NAME = #{customerName},
+            PHONE = #{phone},
+            ADDRESS = #{address},
+            ITEM_NAME = #{itemName},
+            QTY = #{qty}
+        WHERE ORDER_ID = #{orderId}
+
+    </update>
+
+    <!-- 주문 삭제 -->
+    <delete id="deleteOrder" parameterType="hashmap">
+
+        DELETE FROM ORDERS
+        WHERE ORDER_ID = #{orderId}
+
+    </delete>
+
+    <!-- 주문 상태 변경 -->
+    <update id="updateOrderStatus" parameterType="hashmap">
+
+        UPDATE ORDERS
+        SET STATUS = #{status}
+        WHERE ORDER_ID = #{orderId}
+
+    </update>
+
 </mapper>

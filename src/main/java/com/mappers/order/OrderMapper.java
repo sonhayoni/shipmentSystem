@@ -8,9 +8,13 @@ import java.util.Map;
 @Mapper
 public interface OrderMapper {
 
-    // 주문 목록 조회
     List<Map<String, Object>> getOrderList();
 
-    // 주문 등록
     int insertOrder(Map<String, Object> param);
+
+    int updateOrder(Map<String, Object> param);
+
+    int deleteOrder(Map<String, Object> param);
+
+    int updateOrderStatus(Map<String, Object> param);
 }
